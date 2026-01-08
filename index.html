@@ -42,6 +42,48 @@
             -moz-osx-font-smoothing: grayscale;
         }
         
+        /* Loading Screen */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #fdfcfb 0%, #f5f7fa 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loader {
+            width: 60px;
+            height: 60px;
+            position: relative;
+        }
+        
+        .loader-heart {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            color: var(--love);
+            font-size: 3rem;
+            animation: heartbeat 1.5s infinite ease-in-out;
+        }
+        
+        .loader-text {
+            margin-top: 20px;
+            color: var(--primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
         /* Mobile-first responsive design */
         .container {
             width: 100%;
@@ -50,6 +92,8 @@
             padding: 0 15px;
             position: relative;
             z-index: 1;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.5s forwards;
         }
         
         /* Header for mobile */
@@ -155,6 +199,9 @@
             border: 1px solid rgba(255,255,255,0.2);
             backdrop-filter: blur(10px);
             width: 100%;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.6s ease 0.8s forwards;
         }
         
         .card h2 {
@@ -208,6 +255,9 @@
             border: 2px dashed rgba(255, 20, 147, 0.3);
             backdrop-filter: blur(10px);
             width: 100%;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.6s ease 1s forwards;
         }
         
         .love-button-section h2 {
@@ -238,10 +288,13 @@
             position: relative;
             overflow: hidden;
             z-index: 1;
+            transform: scale(0.9);
+            opacity: 0;
+            animation: bounceIn 0.6s ease 1.2s forwards;
         }
         
         .love-btn:active {
-            transform: scale(0.98);
+            transform: scale(0.95);
         }
         
         /* Heart Formation Container for mobile */
@@ -284,9 +337,28 @@
             opacity: 0;
             filter: drop-shadow(0 0 10px rgba(255, 20, 147, 0.8));
             z-index: 3;
-            transform: translateY(100vh) scale(0.5);
+            transform: translate(var(--target-x), var(--target-y)) scale(0.1);
             transition: transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 1s ease;
             touch-action: none;
+        }
+        
+        .heart-float.forming {
+            transform: translate(var(--target-x), var(--target-y)) scale(1);
+            opacity: 1;
+        }
+        
+        .heart-float.pulsing {
+            animation: heartPulse 1s ease-in-out infinite alternate;
+        }
+        
+        /* Extra floating hearts */
+        .extra-heart, .decorative-heart {
+            position: absolute;
+            color: var(--love);
+            filter: drop-shadow(0 0 8px rgba(255, 20, 147, 0.6));
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
         }
         
         /* Heart Message for mobile */
@@ -338,6 +410,9 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.2);
             width: 100%;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.6s ease 1.4s forwards;
         }
         
         .celebration-section h2 {
@@ -364,10 +439,22 @@
             position: relative;
             overflow: hidden;
             z-index: 1;
+            transform: scale(0.9);
+            opacity: 0;
+            animation: bounceIn 0.6s ease 1.6s forwards;
         }
         
         .celebration-btn:active {
-            transform: scale(0.98);
+            transform: scale(0.95);
+        }
+        
+        /* Confetti styles */
+        .confetti-piece {
+            position: fixed;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 9999;
+            border-radius: 50%;
         }
         
         /* Signature for mobile */
@@ -380,6 +467,9 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.2);
             width: 100%;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.6s ease 1.8s forwards;
         }
         
         .signature p {
@@ -408,6 +498,9 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.2);
             width: 100%;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.6s ease 2s forwards;
         }
         
         .heart-icon {
@@ -460,6 +553,32 @@
             100% { opacity: 1; }
         }
         
+        @keyframes fadeInUp {
+            0% { 
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            100% { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes bounceIn {
+            0% { 
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            60% { 
+                transform: scale(1.05);
+                opacity: 1;
+            }
+            100% { 
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
@@ -467,7 +586,8 @@
         
         @keyframes heartPulse {
             0% { transform: scale(1) translate(var(--target-x), var(--target-y)); }
-            100% { transform: scale(1.2) translate(var(--target-x), var(--target-y)); }
+            50% { transform: scale(1.1) translate(var(--target-x), var(--target-y)); }
+            100% { transform: scale(1) translate(var(--target-x), var(--target-y)); }
         }
         
         @keyframes floatBackground {
@@ -493,6 +613,20 @@
             50% { transform: translate(0, 30px) rotate(180deg); opacity: 0.7; }
             75% { transform: translate(-15px, 15px) rotate(270deg); opacity: 0.8; }
             100% { transform: translate(0, 0) rotate(360deg); opacity: 0.7; }
+        }
+        
+        @keyframes heartFormation {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) rotate(360deg);
+                opacity: 1;
+            }
         }
         
         /* iPad and larger phones */
@@ -663,6 +797,16 @@
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div style="text-align: center;">
+            <div class="loader">
+                <div class="loader-heart">❤️</div>
+            </div>
+            <div class="loader-text">Loading Birthday Magic...</div>
+        </div>
+    </div>
+    
     <!-- Background Hearts -->
     <div class="background-hearts" id="background-hearts"></div>
     
@@ -731,6 +875,7 @@
 
     <script>
         // DOM Elements
+        const loading = document.getElementById('loading');
         const birthdayName = document.getElementById('birthday-name');
         const loveBtn = document.getElementById('love-btn');
         const celebrationBtn = document.getElementById('celebration-btn');
@@ -750,21 +895,24 @@
         
         // Performance optimization for mobile
         const heartConfig = {
-            heartCount: isMobile ? 40 : 60, // Fewer hearts on mobile for better performance
+            heartCount: isMobile ? 40 : 60,
             heartColors: ['#FF1493', '#FF6B8B', '#FF69B4', '#FFB6C1', '#DB7093']
         };
         
         // Background hearts configuration (reduced on mobile)
         const bgHeartConfig = {
-            count: isMobile ? 15 : 25, // Fewer background hearts on mobile
+            count: isMobile ? 15 : 25,
             minSize: 1,
             maxSize: isMobile ? 1.8 : 2.5,
             minDuration: 15,
             maxDuration: 25
         };
         
-        // Heart shape points for formation
+        // State management
+        let isProcessing = false;
         let heartShapePoints = [];
+        let bgHeartTimeouts = [];
+        let activeTimeouts = [];
         
         // Love messages
         const loveMessages = [
@@ -793,7 +941,7 @@
                 const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
                 
                 // Scale based on device
-                const scale = isMobile ? 12 : 15;
+                const scale = isMobile ? 10 : 12;
                 const scaledX = x * scale;
                 const scaledY = -y * scale; // Negative to flip heart right side up
                 
@@ -828,9 +976,11 @@
                 fragment.appendChild(heart);
                 
                 // Reset heart position after animation ends and restart
-                setTimeout(() => {
+                const timeoutId = setTimeout(() => {
                     resetBackgroundHeart(heart);
                 }, (delay + duration) * 1000);
+                
+                bgHeartTimeouts.push(timeoutId);
             }
             
             backgroundHearts.appendChild(fragment);
@@ -860,9 +1010,17 @@
             }, 10);
             
             // Schedule next reset
-            setTimeout(() => {
+            const timeoutId = setTimeout(() => {
                 resetBackgroundHeart(heart);
             }, (delay + duration) * 1000);
+            
+            bgHeartTimeouts.push(timeoutId);
+        }
+        
+        // Cleanup background hearts
+        function cleanupBackgroundHearts() {
+            bgHeartTimeouts.forEach(id => clearTimeout(id));
+            bgHeartTimeouts = [];
         }
         
         // Function to set birthday details from URL parameters
@@ -886,7 +1044,7 @@
             heartMessageText.textContent = `Each floating heart represents a piece of my love for you. Together they form a complete heart, just like our love completes each other. Happy Birthday, ${name}!`;
         }
         
-        // Create floating hearts that form a heart shape together (optimized for mobile)
+        // Create floating hearts that form a heart shape together
         function createFloatingHeartFormation() {
             // Clear any existing hearts
             heartFormation.innerHTML = '';
@@ -895,6 +1053,10 @@
             if (heartShapePoints.length === 0) {
                 heartShapePoints = generateHeartShapePoints(heartConfig.heartCount);
             }
+            
+            // Get formation container dimensions
+            const formationWidth = heartFormation.offsetWidth;
+            const formationHeight = heartFormation.offsetHeight;
             
             // Create hearts for the formation
             heartShapePoints.forEach((point, index) => {
@@ -909,130 +1071,103 @@
                 const targetX = point.x + 'px';
                 const targetY = point.y + 'px';
                 
-                // Set initial position (random at bottom of screen)
-                const startX = (Math.random() * 100 - 50) + 'px';
-                const startY = '100vh';
-                
                 // Set CSS custom properties
                 heart.style.setProperty('--target-x', targetX);
                 heart.style.setProperty('--target-y', targetY);
                 heart.style.color = color;
                 heart.style.fontSize = `${Math.random() * 0.8 + (isMobile ? 1 : 1.2)}rem`;
-                heart.style.left = `calc(50% + ${startX})`;
-                heart.style.top = startY;
-                heart.style.transform = `translate(0, 0) scale(0.5)`;
+                heart.style.left = '50%';
+                heart.style.top = '50%';
+                heart.style.transform = `translate(-50%, -50%) scale(0.1)`;
+                heart.style.opacity = '0';
                 
                 heartFormation.appendChild(heart);
                 
                 // Force reflow to ensure transition works
                 heart.offsetHeight;
                 
-                // Animate heart to form the heart shape with staggered delay
-                setTimeout(() => {
+                // Store timeout ID
+                const timeout1 = setTimeout(() => {
+                    heart.style.opacity = '1';
                     heart.classList.add('forming');
                     
-                    // After forming, make it pulse
-                    setTimeout(() => {
+                    const timeout2 = setTimeout(() => {
                         heart.classList.add('pulsing');
-                    }, isMobile ? 1000 : 1500 + index * 20);
+                    }, isMobile ? 800 : 1200 + index * 10);
                     
-                }, isMobile ? 50 + index * 20 : 100 + index * 30); // Faster on mobile
+                    activeTimeouts.push(timeout2);
+                    
+                }, isMobile ? index * 30 : index * 40); // Staggered animation
+                
+                activeTimeouts.push(timeout1);
             });
             
             // Add some random floating hearts around the formation (fewer on mobile)
-            if (!isMobile) {
-                createRandomFloatingHearts();
-                createDecorativeHearts();
-            }
+            createRandomFloatingHearts();
         }
         
         // Create random floating hearts around the formation
         function createRandomFloatingHearts() {
             const randomHeartCount = isMobile ? 15 : 25;
+            const formationWidth = heartFormation.offsetWidth;
+            const formationHeight = heartFormation.offsetHeight;
             
             for (let i = 0; i < randomHeartCount; i++) {
                 const heart = document.createElement('div');
-                heart.className = 'extra-heart will-change';
+                heart.className = 'extra-heart';
                 heart.innerHTML = '❤';
                 
                 // Random properties
                 const size = Math.random() * (isMobile ? 0.8 : 1.2) + 0.8;
                 const color = heartConfig.heartColors[Math.floor(Math.random() * heartConfig.heartColors.length)];
-                const startX = Math.random() * 100 + 'vw';
-                const startY = 100 + Math.random() * 20 + 'vh';
-                const endX = (Math.random() * 200 - 100) + 'px';
-                const endY = (-Math.random() * 200 - 100) + 'px';
+                const startX = Math.random() * formationWidth + 'px';
+                const startY = Math.random() * formationHeight + 'px';
+                const endX = (Math.random() * 100 - 50) + 'px';
+                const endY = (Math.random() * 100 - 50) + 'px';
                 const rotation = Math.random() * 360;
-                const delay = Math.random() * 3 + 1;
-                const duration = Math.random() * (isMobile ? 6 : 8) + 6;
+                const delay = Math.random() * 1 + 0.5;
+                const duration = Math.random() * (isMobile ? 4 : 6) + 3;
                 
-                // Set initial position (off screen bottom)
+                // Set initial position (random around formation)
                 heart.style.left = startX;
                 heart.style.top = startY;
                 heart.style.color = color;
                 heart.style.fontSize = `${size}rem`;
-                heart.style.transform = `rotate(${rotation}deg)`;
+                heart.style.transform = `translate(-50%, -50%) rotate(${rotation}deg) scale(0.1)`;
                 heart.style.opacity = '0';
                 
-                heartContainer.appendChild(heart);
+                heartFormation.appendChild(heart);
                 
                 // Animate after a delay
-                setTimeout(() => {
+                const timeout1 = setTimeout(() => {
                     heart.style.transition = `transform ${duration}s ease-out, opacity ${duration/2}s ease`;
-                    heart.style.transform = `translate(${endX}, ${endY}) rotate(${rotation + 360}deg)`;
-                    heart.style.opacity = '0.7';
+                    heart.style.transform = `translate(calc(-50% + ${endX}), calc(-50% + ${endY})) rotate(${rotation + 360}deg) scale(1)`;
+                    heart.style.opacity = '0.6';
                     
                     // Remove after animation
-                    setTimeout(() => {
+                    const timeout2 = setTimeout(() => {
                         heart.style.opacity = '0';
-                        setTimeout(() => {
+                        const timeout3 = setTimeout(() => {
                             if (heart.parentNode) {
                                 heart.remove();
                             }
                         }, 1000);
+                        activeTimeouts.push(timeout3);
                     }, duration * 1000);
+                    
+                    activeTimeouts.push(timeout2);
+                    
                 }, delay * 1000);
-            }
-        }
-        
-        // Create decorative hearts floating around
-        function createDecorativeHearts() {
-            const decorativeCount = isMobile ? 10 : 15;
-            
-            for (let i = 0; i < decorativeCount; i++) {
-                const heart = document.createElement('div');
-                heart.className = 'extra-heart will-change';
-                heart.innerHTML = '❤';
                 
-                // Random properties
-                const size = Math.random() * 0.8 + 0.5;
-                const color = heartConfig.heartColors[Math.floor(Math.random() * heartConfig.heartColors.length)];
-                const left = Math.random() * 100 + '%';
-                const top = Math.random() * 100 + '%';
-                const rotation = Math.random() * 360;
-                const delay = Math.random() * 5;
-                const duration = Math.random() * 20 + 20;
-                
-                // Set position
-                heart.style.left = left;
-                heart.style.top = top;
-                heart.style.color = color;
-                heart.style.fontSize = `${size}rem`;
-                heart.style.transform = `rotate(${rotation}deg)`;
-                heart.style.opacity = '0';
-                
-                heartContainer.appendChild(heart);
-                
-                // Start animation after delay
-                setTimeout(() => {
-                    heart.style.animation = `floatAround ${duration}s linear infinite`;
-                    heart.style.opacity = '0.7';
-                }, delay * 1000);
+                activeTimeouts.push(timeout1);
             }
         }
         
         // Show heart formation
         function showHeartFormation() {
+            if (isProcessing) return;
+            isProcessing = true;
+            
             // Show the heart container first
             heartContainer.classList.add('active');
             
@@ -1040,13 +1175,17 @@
             document.body.style.overflow = 'hidden';
             
             // Create the heart formation after a short delay to ensure container is visible
-            setTimeout(() => {
+            const timeout = setTimeout(() => {
                 createFloatingHeartFormation();
+                isProcessing = false;
             }, 100);
+            
+            activeTimeouts.push(timeout);
             
             // Show random love message
             const randomMessage = loveMessages[Math.floor(Math.random() * loveMessages.length)];
-            heartMessageText.textContent = `${randomMessage} Happy Birthday, ${birthdayName.textContent}!`;
+            const name = birthdayName.textContent;
+            heartMessageText.textContent = `${randomMessage} Happy Birthday, ${name}!`;
             
             // Vibrate device if supported (for mobile)
             vibrateDevice();
@@ -1054,38 +1193,55 @@
         
         // Hide heart formation
         function hideHeartFormation() {
+            if (isProcessing) return;
+            isProcessing = true;
+            
             heartContainer.classList.remove('active');
             
             // Re-enable scrolling
             document.body.style.overflow = 'auto';
             
-            // Remove all hearts
-            const hearts = document.querySelectorAll('.heart-float, .extra-heart');
+            // Clear all active timeouts
+            activeTimeouts.forEach(id => clearTimeout(id));
+            activeTimeouts = [];
+            
+            // Remove all hearts with fade out
+            const hearts = document.querySelectorAll('.heart-float, .extra-heart, .decorative-heart');
             hearts.forEach(heart => {
-                if (heart.parentNode) {
-                    heart.remove();
-                }
+                heart.style.transition = 'opacity 0.3s ease';
+                heart.style.opacity = '0';
+                const timeout = setTimeout(() => {
+                    if (heart.parentNode) {
+                        heart.remove();
+                    }
+                }, 300);
+                activeTimeouts.push(timeout);
             });
             
             // Clear heart shape points for next time
             heartShapePoints = [];
+            
+            setTimeout(() => {
+                isProcessing = false;
+            }, 500);
         }
         
         // Create confetti effect (optimized for mobile)
         function createConfetti() {
+            if (isProcessing) return;
+            isProcessing = true;
+            
             const confettiCount = isMobile ? 100 : 200;
             const colors = ['#FF6B8B', '#6C63FF', '#FFD166', '#06D6A0', '#FF9E6D'];
             
-            // Use DocumentFragment for better performance
-            const fragment = document.createDocumentFragment();
-            const confettiElements = [];
-            
+            // Create confetti pieces
             for (let i = 0; i < confettiCount; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti-piece';
                 
                 // Size based on device
                 const size = isMobile ? Math.random() * 12 + 6 : Math.random() * 20 + 8;
+                const shape = Math.random();
                 
                 confetti.style.cssText = `
                     position: fixed;
@@ -1094,39 +1250,47 @@
                     background: ${colors[Math.floor(Math.random() * colors.length)]};
                     top: -30px;
                     left: ${Math.random() * 100}%;
-                    border-radius: ${Math.random() > 0.5 ? '50%' : Math.random() > 0.5 ? '0' : '8px'};
+                    border-radius: ${shape > 0.66 ? '50%' : shape > 0.33 ? '0' : '8px'};
                     z-index: 9999;
                     pointer-events: none;
                     opacity: 0.9;
                     transform-origin: center;
                 `;
                 
-                confettiElements.push(confetti);
-                fragment.appendChild(confetti);
-            }
-            
-            document.body.appendChild(fragment);
-            
-            // Animate all confetti pieces
-            confettiElements.forEach(confetti => {
-                const animation = confetti.animate([
-                    { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
-                    { transform: `translateY(${window.innerHeight + 100}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
-                ], {
-                    duration: Math.random() * (isMobile ? 3000 : 4000) + 2000,
-                    easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)'
-                });
+                document.body.appendChild(confetti);
                 
-                // Remove confetti after animation
-                animation.onfinish = () => {
+                // Animate confetti
+                const duration = Math.random() * (isMobile ? 3000 : 4000) + 2000;
+                const endX = (Math.random() * 200 - 100) + 'px';
+                
+                confetti.animate([
+                    { 
+                        transform: 'translateY(0) rotate(0deg)', 
+                        opacity: 1 
+                    },
+                    { 
+                        transform: `translateY(${window.innerHeight + 100}px) translateX(${endX}) rotate(${Math.random() * 720}deg)`, 
+                        opacity: 0 
+                    }
+                ], {
+                    duration: duration,
+                    easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)'
+                }).onfinish = () => {
                     if (confetti.parentNode) {
                         confetti.remove();
                     }
                 };
-            });
+            }
             
             // Show celebration message
             showCelebrationMessage();
+            
+            // Vibrate device if supported
+            vibrateDevice();
+            
+            setTimeout(() => {
+                isProcessing = false;
+            }, 2000);
         }
         
         // Show celebration message
@@ -1147,7 +1311,7 @@
                 position: fixed;
                 top: 30px;
                 left: 50%;
-                transform: translateX(-50%);
+                transform: translateX(-50%) translateY(-100px);
                 background: linear-gradient(135deg, #FF6B8B, #6C63FF);
                 color: white;
                 padding: ${isMobile ? '15px 25px' : '20px 40px'};
@@ -1156,7 +1320,7 @@
                 font-size: ${isMobile ? '1.3rem' : '1.5rem'};
                 z-index: 10000;
                 box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-                animation: bounceIn 0.5s ease;
+                animation: toastSlideIn 0.5s ease forwards;
                 border: 2px solid white;
                 text-align: center;
                 max-width: 90%;
@@ -1165,16 +1329,17 @@
             
             document.body.appendChild(toast);
             
-            // Remove toast after 3 seconds on mobile, 4 on desktop
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transition = 'opacity 0.5s ease';
+            // Remove toast after delay
+            const timeout = setTimeout(() => {
+                toast.style.animation = 'toastSlideOut 0.5s ease forwards';
                 setTimeout(() => {
                     if (toast.parentNode) {
                         toast.remove();
                     }
                 }, 500);
             }, isMobile ? 3000 : 4000);
+            
+            activeTimeouts.push(timeout);
         }
         
         // Vibrate device if supported (for mobile)
@@ -1185,26 +1350,32 @@
             }
         }
         
+        // Event handlers
+        function handleLoveButton(e) {
+            if (e.type === 'touchend') e.preventDefault();
+            showHeartFormation();
+        }
+        
+        function handleCelebration(e) {
+            if (e.type === 'touchend') e.preventDefault();
+            createConfetti();
+        }
+        
+        function handleCloseHeart(e) {
+            if (e.type === 'touchend') e.preventDefault();
+            hideHeartFormation();
+        }
+        
         // Initialize touch and click events
         function initializeEvents() {
-            // Use both touch and click for better mobile compatibility
-            loveBtn.addEventListener('click', showHeartFormation);
-            loveBtn.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                showHeartFormation();
-            });
+            loveBtn.addEventListener('click', handleLoveButton);
+            loveBtn.addEventListener('touchend', handleLoveButton);
             
-            celebrationBtn.addEventListener('click', createConfetti);
-            celebrationBtn.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                createConfetti();
-            });
+            celebrationBtn.addEventListener('click', handleCelebration);
+            celebrationBtn.addEventListener('touchend', handleCelebration);
             
-            closeHeartBtn.addEventListener('click', hideHeartFormation);
-            closeHeartBtn.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                hideHeartFormation();
-            });
+            closeHeartBtn.addEventListener('click', handleCloseHeart);
+            closeHeartBtn.addEventListener('touchend', handleCloseHeart);
             
             // Close heart when clicking/touching outside the heart content
             heartContainer.addEventListener('click', function(e) {
@@ -1221,6 +1392,13 @@
             });
         }
         
+        // Cleanup function
+        function cleanup() {
+            cleanupBackgroundHearts();
+            activeTimeouts.forEach(id => clearTimeout(id));
+            activeTimeouts = [];
+        }
+        
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             // Set birthday details from URL parameters
@@ -1232,22 +1410,28 @@
             // Initialize events
             initializeEvents();
             
-            // Add animation to card on load
+            // Hide loading screen after everything is ready
             setTimeout(() => {
-                const card = document.querySelector('.card');
-                if (card) {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
+                loading.classList.add('hidden');
+                
+                // Add toast animation styles
+                if (!document.querySelector('style[data-toast-animations]')) {
+                    const style = document.createElement('style');
+                    style.setAttribute('data-toast-animations', 'true');
+                    style.textContent = `
+                        @keyframes toastSlideIn {
+                            0% { transform: translateX(-50%) translateY(-100px); opacity: 0; }
+                            100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+                        }
+                        
+                        @keyframes toastSlideOut {
+                            0% { transform: translateX(-50%) translateY(0); opacity: 1; }
+                            100% { transform: translateX(-50%) translateY(-100px); opacity: 0; }
+                        }
+                    `;
+                    document.head.appendChild(style);
                 }
-            }, 300);
-            
-            // Add bounce-in animation for buttons on load
-            setTimeout(() => {
-                const buttons = document.querySelectorAll('.love-btn, .celebration-btn');
-                buttons.forEach(btn => {
-                    btn.style.animation = 'bounceIn 0.6s ease';
-                });
-            }, 500);
+            }, 1500);
             
             // Prevent unwanted scrolling when heart container is open
             document.addEventListener('touchmove', function(e) {
@@ -1283,24 +1467,9 @@
             }
         });
         
-        // Add bounceIn animation if not already in styles
-        if (!document.querySelector('style[data-bounce-in]')) {
-            const style = document.createElement('style');
-            style.setAttribute('data-bounce-in', 'true');
-            style.textContent = `
-                @keyframes bounceIn {
-                    0% { transform: scale(0.8); opacity: 0; }
-                    60% { transform: scale(1.05); opacity: 1; }
-                    100% { transform: scale(1); opacity: 1; }
-                }
-                
-                @keyframes heartPulse {
-                    0% { transform: scale(1) translate(var(--target-x), var(--target-y)); }
-                    100% { transform: scale(1.15) translate(var(--target-x), var(--target-y)); }
-                }
-            `;
-            document.head.appendChild(style);
-        }
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', cleanup);
+        window.addEventListener('pagehide', cleanup);
         
         // iOS specific fixes
         if (isIOS) {
